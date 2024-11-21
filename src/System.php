@@ -101,6 +101,22 @@ class System
     }
 
     /**
+     * Rebuild relationships for sugarcrm
+     * @param     boolean    $executeSql    Launch the SQL queries
+     * @param     string     $user_id       User id of the admin user
+     * @return    array                     Messages
+     */
+    public function rebuildRelationship($executeSql = false, $userId = '1')
+    {
+        $this->setUpQuickRepair($userId);
+        include 'modules/Administration/RebuildRelationship.php';
+        $repair = new \RepairAndClear();
+        $repair->repairAndClearAll(array('clearAll'), array(translate('LBL_ALL_MODULES')), $executeSql, true, '');
+        \LanguageManager::removeJSLanguageFiles();
+        return $this->getMessages();
+    }
+
+    /**
      * Rebuild only Extensions.
      * @param     array      $modules       Rebuild only the specified modules
      * @param     string     $user_id       User id of the admin user
